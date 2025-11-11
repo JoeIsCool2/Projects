@@ -11,12 +11,14 @@ struct SliderQuestionMaker {
 struct SliderQuestion: View {
     var question: SliderQuestionMaker
     @Binding var results: [House]
+    @Binding var selectedSliderQuestion: [String: Int]
     @State private var isEditing = false
     @State private var lastPick: House? = nil
     
     var body: some View {
-        var amount = question.amount
-        VStack(spacing: 24) {
+        var amount = selectedSliderQuestion[question.question] ?? question.amount
+                            
+                            VStack(spacing: 24) {
             Text(question.question)
                 .modifier(BigishWords())
                 .padding()
@@ -45,6 +47,7 @@ struct SliderQuestion: View {
                                 print("Slider change \(amount): \(String(describing: lastPick)) removed")
                             }
                             results.append(house)
+                            selectedSliderQuestion[question.question] = amount
                             lastPick = house
                             print("Slider stopped at \(amount): \(house) added")
                         }
@@ -54,10 +57,10 @@ struct SliderQuestion: View {
             .tint(.yellow)
             .padding()
         }
-        .glassEffect(in: .rect(cornerRadius: 16.0))
-        .padding()
+            .glassEffect(in: .rect(cornerRadius: 16.0))
+            .padding()
     }
-
+    
     func houseForValue(_ value: Int) -> House? {
         for (range, house) in question.answers {
             if range.contains(value) {

@@ -1,38 +1,38 @@
 let multipleChoiceQuestions: [MultipleChoice] = [
     MultipleChoice(
-        question: "Which fruit do you like best? (Choose as many as you want)",
+        question: "Which fruit are you most likely to pick as a favorite? (Choose as many as you want)",
         answers: [
-            "Strawberry" : .Hufflepuff,
-            "Pomegranate" : .Ravenclaw,
             "Banana" : .Slytherin,
-            "Dragonfruit" : .Gryffindor
+            "Dragonfruit" : .Gryffindor,
+            "Strawberry" : .Hufflepuff,
+            "Pomegranate" : .Ravenclaw
         ]
     ),
     MultipleChoice(
-        question: "Which type of music do you vibe with most? (Choose as many as you want)",
+        question: "Which music style do you enjoy most? (Choose as many as you want)",
         answers: [
-            "Rock anthems" : .Slytherin,
-            "Electronic beats" : .Hufflepuff,
-            "Acoustic folk" : .Ravenclaw,
-            "Classical or jazz" : .Gryffindor
+            "Ambient/electronic" : .Ravenclaw,
+            "Dark trap or hard rap" : .Slytherin,
+            "Anthemic rock" : .Gryffindor,
+            "Upbeat pop/dance" : .Hufflepuff
         ]
     ),
     MultipleChoice(
-        question: "Pick a color you’re drawn to. (Choose as many as you want)",
+        question: "Pick the color you’re most drawn to. (Choose as many as you want)",
         answers: [
-            "Red" : .Ravenclaw,
-            "Green" : .Hufflepuff,
-            "Yellow" : .Gryffindor,
-            "Blue" : .Slytherin
+            "Blue" : .Ravenclaw,
+            "Yellow" : .Hufflepuff,
+            "Green" : .Slytherin,
+            "Red" : .Gryffindor
         ]
     ),
     MultipleChoice(
-        question: "Which pet would you adopt? (Choose as many as you want)",
+        question: "Which pet would you most like to adopt? (Choose as many as you want)",
         answers: [
-            "Dog" : .Slytherin,
-            "Cat" : .Ravenclaw,
-            "Rabbit" : .Gryffindor,
-            "Owl" : .Hufflepuff
+            "Clever snake" : .Slytherin,
+            "Insightful cat" : .Ravenclaw,
+            "Lionhearted dog" : .Gryffindor,
+            "Faithful rabbit" : .Hufflepuff
         ]
     )
 ]
@@ -40,39 +40,39 @@ let multipleChoiceQuestions: [MultipleChoice] = [
 
 let pickerQuestions: [PickerQuestionMaker] = [
     PickerQuestionMaker(
-        question: "What’s your favorite drink?",
+        question: "What’s your go-to drink?",
         answers: [
-            "Spicy ginger ale" : .Ravenclaw,
-            "Espresso" : .Hufflepuff,
-            "Hot cocoa" : .Slytherin,
-            "Green tea" : .Gryffindor
+            "Spicy ginger ale" : .Gryffindor,
+            "Espresso" : .Slytherin,
+            "Hot cocoa" : .Hufflepuff,
+            "Green tea" : .Ravenclaw
         ]
     ),
     PickerQuestionMaker(
-        question: "Which place would you rather explore?",
+        question: "Which place would you rather spend an afternoon exploring?",
         answers: [
-            "Mountain trail" : .Slytherin,
-            "Abandoned building" : .Hufflepuff,
-            "Cozy café" : .Gryffindor,
+            "Shadowy city alleys" : .Slytherin,
+            "Cozy café with friends" : .Hufflepuff,
+            "Mountain climb" : .Gryffindor,
             "Quiet library" : .Ravenclaw
         ]
     ),
     PickerQuestionMaker(
-        question: "Which snack calls to you?",
+        question: "Which snack are you craving right now?",
         answers: [
-            "Chips" : .Ravenclaw,
-            "Chocolate" : .Gryffindor,
-            "Cookies" : .Slytherin,
-            "Tea biscuits" : .Hufflepuff
+            "Rich truffles" : .Slytherin,
+            "Bold dark chocolate" : .Gryffindor,
+            "Warm cookies to share" : .Hufflepuff,
+            "Savory chips while reading" : .Ravenclaw
         ]
     ),
     PickerQuestionMaker(
-        question: "What’s your favorite season?",
+        question: "Which season do you enjoy the most?",
         answers: [
-            "Summer" : .Hufflepuff,
-            "Winter" : .Ravenclaw,
-            "Spring" : .Slytherin,
-            "Autumn" : .Gryffindor
+            "Spring (fresh starts and ambition)" : .Slytherin,
+            "Winter (quiet and reflective)" : .Ravenclaw,
+            "Autumn (crisp and adventurous)" : .Gryffindor,
+            "Summer (warm and friendly)" : .Hufflepuff
         ]
     )
 ]
@@ -82,9 +82,9 @@ let sliderQuestions: [SliderQuestionMaker] = [
     SliderQuestionMaker(
         question: "How much do you enjoy surprises?",
         answers: [
-            0...25 : .Slytherin,
-            26...50 : .Ravenclaw,
-            51...75 : .Hufflepuff,
+            0...25 : .Ravenclaw,
+            26...50 : .Hufflepuff,
+            51...75 : .Slytherin,
             76...100 : .Gryffindor
         ],
         lowLabel: "Hate them",
@@ -92,23 +92,23 @@ let sliderQuestions: [SliderQuestionMaker] = [
         amount: 0
     ),
     SliderQuestionMaker(
-        question: "How competitive are you?",
+        question: "How competitive do you consider yourself?",
         answers: [
-            0...25 : .Ravenclaw,
-            26...50 : .Gryffindor,
-            51...75 : .Slytherin,
-            76...100 : .Hufflepuff
+            0...25 : .Hufflepuff,
+            26...50 : .Ravenclaw,
+            51...75 : .Gryffindor,
+            76...100 : .Slytherin
         ],
         lowLabel: "Not at all",
         highLabel: "Extremely",
         amount: 0
     ),
     SliderQuestionMaker(
-        question: "How much do you like being the center of attention?",
+        question: "How comfortable are you being the center of attention?",
         answers: [
-            0...25 : .Hufflepuff,
-            26...50 : .Slytherin,
-            51...75 : .Ravenclaw,
+            0...25 : .Ravenclaw,
+            26...50 : .Hufflepuff,
+            51...75 : .Slytherin,
             76...100 : .Gryffindor
         ],
         lowLabel: "Prefer background",
@@ -116,18 +116,19 @@ let sliderQuestions: [SliderQuestionMaker] = [
         amount: 0
     ),
     SliderQuestionMaker(
-        question: "How much do you trust strangers?",
+        question: "How much do you tend to trust strangers?",
         answers: [
-            0...25 : .Gryffindor,
-            26...50 : .Hufflepuff,
-            51...75 : .Ravenclaw,
-            76...100 : .Slytherin
+            0...25 : .Slytherin,
+            26...50 : .Ravenclaw,
+            51...75 : .Hufflepuff,
+            76...100 : .Gryffindor
         ],
         lowLabel: "Not at all",
         highLabel: "Completely",
         amount: 0
     )
 ]
+
 
 
 

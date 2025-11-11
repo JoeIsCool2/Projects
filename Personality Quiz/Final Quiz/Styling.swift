@@ -15,6 +15,7 @@ struct BigishWords: ViewModifier {
             .font(.system(size: 36, weight: .bold, design: .serif))
             .foregroundColor(.white)
             .shadow(color: Color.black, radius: 4, x: 0, y: 2)
+            .padding()
     }
 }
 struct InfoCapsule: ViewModifier {

@@ -7,7 +7,7 @@ struct MultipleChoice {
 
 struct MultipleChoiceQuestion: View {
     let question: MultipleChoice
-    @State var selectedAnswers: [String?] = []
+    @Binding var selectedAnswers: [String?]
     @State private var selectedAnswer: String? = nil
     @Binding var results: [House]
     

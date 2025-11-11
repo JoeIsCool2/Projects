@@ -7,6 +7,9 @@ enum House {
 struct QuizView: View {
     @State var results: [House] = []
     @State var currentQuestion = 0
+    @State var selectedSliderQuestion: [String: Int] = [:]
+    @State var selectedAnswersMulti: [String?] = []
+    @State var allSelectedAnswers: [String: House] = [:]
     
     var body: some View {
         ZStack {
@@ -17,20 +20,21 @@ struct QuizView: View {
             VStack {
                 if currentQuestion < multipleChoiceQuestions.count {
                        MultipleChoiceQuestion(
-                           question: multipleChoiceQuestions[currentQuestion],
+                        question: multipleChoiceQuestions[currentQuestion], selectedAnswers: $selectedAnswersMulti,
                            results: $results
                        )
                    } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count) {
                        let pickerIndex = currentQuestion - multipleChoiceQuestions.count
                        PickerQuestion(
-                           question: pickerQuestions[pickerIndex],
-                           results: $results
+                        question: pickerQuestions[pickerIndex],
+                        results: $results,
                        )
                    } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count + pickerQuestions.count) {
                        let sliderIndex = currentQuestion - multipleChoiceQuestions.count - pickerQuestions.count
                        SliderQuestion(
                            question: sliderQuestions[sliderIndex],
-                           results: $results
+                           results: $results,
+                           selectedSliderQuestion: $selectedSliderQuestion
                        )
                        .padding(50)
                    } else {

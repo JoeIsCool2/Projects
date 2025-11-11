@@ -16,8 +16,14 @@ struct EndScreen: View {
             VStack {
                 Spacer()
                 let result = findHouse(from: results)
-                Text("You are \(result)")
+                Text("You are \(result[0])")
                     .modifier(BigWords())
+                    .padding()
+                Text("\(result[1])")
+                    .modifier(BigishWords())
+                    .padding()
+                    .glassEffect(in: .rect(cornerRadius: 16.0))
+                    .tint(.clear)
                     .padding()
                 Spacer()
                 NavigationLink("Redo", destination: StartScreen())
@@ -27,7 +33,7 @@ struct EndScreen: View {
     }
 }
 
-func findHouse(from results: [House]) -> String {
+func findHouse(from results: [House]) -> [String] {
     var allHouseCount: [House: Int] = [
         .Gryffindor: 0,
         .Slytherin: 0,
@@ -42,11 +48,16 @@ func findHouse(from results: [House]) -> String {
     let sorted = allHouseCount.sorted { $0.value > $1.value }
     let result = sorted.first?.key
     switch result {
-        case .Gryffindor: return "Gryffindor"
-        case .Slytherin: return "Slytherin"
-        case .Hufflepuff: return "Hufflepuff"
-        case .Ravenclaw: return "Ravenclaw"
-        default: return "Muggle"
+    case .Gryffindor:
+        return ["Gryffindor", "Brave, daring, and chivalrous. Known for courage and strong moral compass."]
+    case .Slytherin:
+        return ["Slytherin", "Ambitious, cunning, and resourceful. Values leadership and self-preservation."]
+    case .Hufflepuff:
+        return ["Hufflepuff", "Loyal, patient, and fair. Champions hard work and kindness."]
+    case .Ravenclaw:
+        return ["Ravenclaw", "Wise, witty, and curious. Celebrates intellect and creativity."]
+    default:
+        return ["Muggle", "Non-magical folk, living outside the wizarding world."]
     }
 }
 
