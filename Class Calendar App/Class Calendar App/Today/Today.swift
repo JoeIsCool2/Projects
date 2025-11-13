@@ -10,4 +10,5 @@ struct Today {
     let dailyCodeChallengeName: String
     let wordOfTheDay: String
     let color = Color.random()
+    var completed = false
 }

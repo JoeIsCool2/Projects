@@ -3,19 +3,18 @@ import SwiftUI
 struct Backround: View {
     var body: some View {
         ZStack {
-//            Color(Color.black)
-//                .ignoresSafeArea()
-//                .scaledToFill()
-            MovingCircleView(color: .red)
-            MovingCircleView(color: .yellow)
-            MovingCircleView(color: .orange)
-            MovingCircleView(color: .yellow)
-            MovingCircleView(color: .red)
-            MovingCircleView(color: .orange)
-            MovingCircleView(color: .red)
-            MovingCircleView(color: .yellow)
-            MovingCircleView(color: .orange)
-            MovingCircleView(color: .yellow)
+            
+            Color.darkSlateGray
+                .ignoresSafeArea()
+            
+            MovingCircleView(color: .electricBlue)
+            MovingCircleView(color: .springGreen)
+            MovingCircleView(color: .malachite)
+            MovingCircleView(color: .emerald)
+            MovingCircleView(color: .electricBlue)
+            MovingCircleView(color: .springGreen)
+            MovingCircleView(color: .malachite)
+            MovingCircleView(color: .emerald)
         }
     }
 }
@@ -42,8 +41,8 @@ struct MovingCircleView: View {
     }
 
     func moveRandomly() {
-        Timer.scheduledTimer(withTimeInterval: 9.0, repeats: true) { _ in
-            withAnimation(.easeInOut(duration: 10.0)) {
+        Timer.scheduledTimer(withTimeInterval: 19.0, repeats: true) { _ in
+            withAnimation(.easeInOut(duration: 20.0)) {
                 position = CGPoint(
                     x: CGFloat.random(in: 50...350),
                     y: CGFloat.random(in: 100...700)
