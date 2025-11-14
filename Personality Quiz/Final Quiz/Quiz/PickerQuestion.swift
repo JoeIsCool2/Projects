@@ -1,39 +1,78 @@
 import SwiftUI
+import Combine
 
-struct PickerQuestionMaker {
-    let question: String
+struct PickerQuestionModel {
+    let prompt: String
     let answers: [String: House]
 }
 
-struct PickerQuestion: View {
-    let question: PickerQuestionMaker
-    @State var selectedAnswers: [String?] = []
-    @State private var selectedAnswer: String? = nil
+@MainActor
+final class PickerQuestionViewModel: ObservableObject {
+    // Inputs
+    let prompt: String
+    let answers: [String: House]
+
+    // External results binding
     @Binding var results: [House]
-    
+
+    // View state
+    @Published var selectedAnswer: String? = nil
+
+    init(model: PickerQuestionModel, results: Binding<[House]>) {
+        self.prompt = model.prompt
+        self.answers = model.answers
+        self._results = results
+    }
+
+    func chooseAnswer(_ answer: String) {
+        guard let house = answers[answer] else { return }
+        if selectedAnswer == answer {
+            selectedAnswer = nil
+            if let index = results.firstIndex(of: house) {
+                results.remove(at: index)
+            }
+            print("\(answer) clicked: \(house) deselected")
+        } else {
+            selectedAnswer = answer
+            results.append(house)
+            print("\(answer) clicked: \(house) selected")
+        }
+    }
+
+    var answerTitles: [String] { Array(answers.keys) }
+    func isSelected(_ answer: String) -> Bool { selectedAnswer == answer }
+}
+
+struct PickerQuestion: View {
+    @StateObject private var vm: PickerQuestionViewModel
+
+    init(question: PickerQuestionModel, results: Binding<[House]>) {
+        _vm = StateObject(wrappedValue: PickerQuestionViewModel(model: question, results: results))
+    }
+
     var body: some View {
         VStack(spacing: 16) {
-            Text(question.question)
+            Text(vm.prompt)
                 .modifier(BigishWords())
-            
-            ForEach(Array(question.answers.keys), id: \.self) { answer in
+
+            ForEach(vm.answerTitles, id: \.self) { answer in
                 Button(action: {
-                    chooseAnswer(answer: answer, indication: question.answers[answer]!)
+                    vm.chooseAnswer(answer)
                 }) {
                     Text(answer)
                         .font(.system(size: 17, weight: .bold, design: .serif))
                         .foregroundColor(.white)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
-                        .background(selectedAnswer == answer || selectedAnswers.contains(answer) ? Color.yellow : Color.black.opacity(0.2))
+                        .background(vm.isSelected(answer) ? Color.yellow : Color.black.opacity(0.2))
                         .cornerRadius(16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
-                                .stroke(selectedAnswer == answer || selectedAnswers.contains(answer) ? Color.orange : Color.clear, lineWidth: 2)
+                                .stroke(vm.isSelected(answer) ? Color.orange : Color.clear, lineWidth: 2)
                         )
-                        .scaleEffect(selectedAnswer == answer || selectedAnswers.contains(answer) ? 1.05 : 1.0)
-                        .shadow(color: selectedAnswer == answer || selectedAnswers.contains(answer) ? Color.orange.opacity(0.6) : Color.clear, radius: 6, x: 0, y: 3)
-                        .animation(.easeInOut(duration: 0.2), value: selectedAnswer == answer)
+                        .scaleEffect(vm.isSelected(answer) ? 1.05 : 1.0)
+                        .shadow(color: vm.isSelected(answer) ? Color.orange.opacity(0.6) : Color.clear, radius: 6, x: 0, y: 3)
+                        .animation(.easeInOut(duration: 0.2), value: vm.selectedAnswer)
                 }
                 .buttonStyle(PlainButtonStyle())
             }
@@ -43,19 +82,5 @@ struct PickerQuestion: View {
         .glassEffect(in: .rect(cornerRadius: 16.0))
         .padding(.horizontal, 30)
         .padding()
-    }
-    
-    func chooseAnswer(answer: String, indication: House) {
-        if selectedAnswer == answer {
-            selectedAnswer = nil
-            if let index = results.firstIndex(of: indication) {
-                results.remove(at: index)
-            }
-            print("\(answer) clicked: \(indication) deselected")
-        } else {
-            selectedAnswer = answer
-            results.append(indication)
-            print("\(answer) clicked: \(indication) selected")
-        }
     }
 }

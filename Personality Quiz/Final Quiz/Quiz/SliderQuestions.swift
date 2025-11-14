@@ -1,24 +1,21 @@
 import SwiftUI
+import Combine
 
-struct SliderQuestionMaker {
+struct SliderQuestionMaker: Identifiable, Hashable {
+    let id = UUID()
     let question: String
     let answers: [ClosedRange<Int>: House]
     let lowLabel: String
     let highLabel: String
-    @State var amount: Int
+    let defaultAmount: Int
 }
 
 struct SliderQuestion: View {
-    var question: SliderQuestionMaker
-    @Binding var results: [House]
-    @Binding var selectedSliderQuestion: [String: Int]
-    @State private var isEditing = false
-    @State private var lastPick: House? = nil
-    
+    @ObservedObject var viewModel: SliderQuestionsViewModel
+    let question: SliderQuestionMaker
+
     var body: some View {
-        var amount = selectedSliderQuestion[question.question] ?? question.amount
-                            
-                            VStack(spacing: 24) {
+        VStack(spacing: 24) {
             Text(question.question)
                 .modifier(BigishWords())
                 .padding()
@@ -31,42 +28,19 @@ struct SliderQuestion: View {
             .padding(.vertical, -20)
             .padding(.bottom, -20)
             Slider(
-                value: Binding(
-                    get: { Double(amount) },
-                    set: { newValue in
-                        amount = Int(newValue)
-                    }
-                ),
-                in: 0...100,
+                value: viewModel.bindingAmount(for: question),
+                in: Double(viewModel.range.lowerBound)...Double(viewModel.range.upperBound),
                 onEditingChanged: { editing in
-                    isEditing = editing
+                    viewModel.setEditing(editing)
                     if !editing {
-                        if let house = houseForValue(amount) {
-                            if lastPick != nil {
-                                results.remove(at: results.firstIndex(of: lastPick!)!)
-                                print("Slider change \(amount): \(String(describing: lastPick)) removed")
-                            }
-                            results.append(house)
-                            selectedSliderQuestion[question.question] = amount
-                            lastPick = house
-                            print("Slider stopped at \(amount): \(house) added")
-                        }
+                        viewModel.commitSelection(for: question)
                     }
                 }
             )
             .tint(.yellow)
             .padding()
         }
-            .glassEffect(in: .rect(cornerRadius: 16.0))
-            .padding()
-    }
-    
-    func houseForValue(_ value: Int) -> House? {
-        for (range, house) in question.answers {
-            if range.contains(value) {
-                return house
-            }
-        }
-        return nil
+        .glassEffect(in: .rect(cornerRadius: 16.0))
+        .padding()
     }
 }

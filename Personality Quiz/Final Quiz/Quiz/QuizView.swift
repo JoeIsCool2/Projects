@@ -5,12 +5,13 @@ enum House {
 }
 
 struct QuizView: View {
-    @State var results: [House] = []
+    // ViewModels for MVVM children
+    @StateObject private var mcViewModel = MultipleChoiceQuestionsViewModel()
+    @StateObject private var sliderViewModel = SliderQuestionsViewModel()
+
+    // Local navigation state
     @State var currentQuestion = 0
-    @State var selectedSliderQuestion: [String: Int] = [:]
-    @State var selectedAnswersMulti: [String?] = []
-    @State var allSelectedAnswers: [String: House] = [:]
-    
+
     var body: some View {
         ZStack {
             Image("BackgroundImage1")
@@ -19,43 +20,43 @@ struct QuizView: View {
                 .scaledToFill()
             VStack {
                 if currentQuestion < multipleChoiceQuestions.count {
-                       MultipleChoiceQuestion(
-                        question: multipleChoiceQuestions[currentQuestion], selectedAnswers: $selectedAnswersMulti,
-                           results: $results
-                       )
-                   } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count) {
-                       let pickerIndex = currentQuestion - multipleChoiceQuestions.count
-                       PickerQuestion(
+                    MultipleChoiceQuestion(
+                        question: multipleChoiceQuestions[currentQuestion],
+                        viewModel: mcViewModel
+                    )
+                } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count) {
+                    let pickerIndex = currentQuestion - multipleChoiceQuestions.count
+                    PickerQuestion(
                         question: pickerQuestions[pickerIndex],
-                        results: $results,
-                       )
-                   } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count + pickerQuestions.count) {
-                       let sliderIndex = currentQuestion - multipleChoiceQuestions.count - pickerQuestions.count
-                       SliderQuestion(
-                           question: sliderQuestions[sliderIndex],
-                           results: $results,
-                           selectedSliderQuestion: $selectedSliderQuestion
-                       )
-                       .padding(50)
-                   } else {
-                       Text("something broke")
-                   }
+                        results: $sliderViewModel.results
+                    )
+                } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count + sliderQuestions.count) {
+                    let sliderIndex = currentQuestion - multipleChoiceQuestions.count - pickerQuestions.count
+                    SliderQuestion(
+                        viewModel: sliderViewModel,
+                        question: sliderQuestions[sliderIndex]
+                    )
+                    .padding(50)
+                } else {
+                    Text("something broke")
+                }
                 HStack {
                     if currentQuestion > 0 {
                         Button("Back", action: backAQuesiton)
                             .buttonStyle(ButtonCapsule())
                     }
-                    if currentQuestion < multipleChoiceQuestions.count + pickerQuestions.count + pickerQuestions.count - 1 {
+                    if currentQuestion < multipleChoiceQuestions.count + pickerQuestions.count + sliderQuestions.count - 1 {
                         Button("Next", action: nextQuesiton)
                             .buttonStyle(ButtonCapsule())
                     } else {
-                        NavigationLink("Finish Quiz →", destination: EndScreen(results: $results))
+                        NavigationLink("Finish Quiz →", destination: EndScreen(viewModel: EndScreenViewModel(results: sliderViewModel.results)))
                             .buttonStyle(ButtonCapsule())
                     }
                 }
             }
         }
     }
+
     func nextQuesiton() {
         currentQuestion += 1
     }

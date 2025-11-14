@@ -38,9 +38,9 @@ let multipleChoiceQuestions: [MultipleChoice] = [
 ]
 
 
-let pickerQuestions: [PickerQuestionMaker] = [
-    PickerQuestionMaker(
-        question: "What’s your go-to drink?",
+let pickerQuestions: [PickerQuestionModel] = [
+    PickerQuestionModel(
+        prompt: "What’s your go-to drink?",
         answers: [
             "Spicy ginger ale" : .Gryffindor,
             "Espresso" : .Slytherin,
@@ -48,8 +48,8 @@ let pickerQuestions: [PickerQuestionMaker] = [
             "Green tea" : .Ravenclaw
         ]
     ),
-    PickerQuestionMaker(
-        question: "Which place would you rather spend an afternoon exploring?",
+    PickerQuestionModel(
+        prompt: "Which place would you rather spend an afternoon exploring?",
         answers: [
             "Shadowy city alleys" : .Slytherin,
             "Cozy café with friends" : .Hufflepuff,
@@ -57,8 +57,8 @@ let pickerQuestions: [PickerQuestionMaker] = [
             "Quiet library" : .Ravenclaw
         ]
     ),
-    PickerQuestionMaker(
-        question: "Which snack are you craving right now?",
+    PickerQuestionModel(
+        prompt: "Which snack are you craving right now?",
         answers: [
             "Rich truffles" : .Slytherin,
             "Bold dark chocolate" : .Gryffindor,
@@ -66,8 +66,8 @@ let pickerQuestions: [PickerQuestionMaker] = [
             "Savory chips while reading" : .Ravenclaw
         ]
     ),
-    PickerQuestionMaker(
-        question: "Which season do you enjoy the most?",
+    PickerQuestionModel(
+        prompt: "Which season do you enjoy the most?",
         answers: [
             "Spring (fresh starts and ambition)" : .Slytherin,
             "Winter (quiet and reflective)" : .Ravenclaw,
@@ -89,7 +89,7 @@ let sliderQuestions: [SliderQuestionMaker] = [
         ],
         lowLabel: "Hate them",
         highLabel: "Love them",
-        amount: 0
+        defaultAmount: 0
     ),
     SliderQuestionMaker(
         question: "How competitive do you consider yourself?",
@@ -101,7 +101,7 @@ let sliderQuestions: [SliderQuestionMaker] = [
         ],
         lowLabel: "Not at all",
         highLabel: "Extremely",
-        amount: 0
+        defaultAmount: 0
     ),
     SliderQuestionMaker(
         question: "How comfortable are you being the center of attention?",
@@ -113,7 +113,7 @@ let sliderQuestions: [SliderQuestionMaker] = [
         ],
         lowLabel: "Prefer background",
         highLabel: "Love spotlight",
-        amount: 0
+        defaultAmount: 0
     ),
     SliderQuestionMaker(
         question: "How much do you tend to trust strangers?",
@@ -125,7 +125,7 @@ let sliderQuestions: [SliderQuestionMaker] = [
         ],
         lowLabel: "Not at all",
         highLabel: "Completely",
-        amount: 0
+        defaultAmount: 0
     )
 ]
 
