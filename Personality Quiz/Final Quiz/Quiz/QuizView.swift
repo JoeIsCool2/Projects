@@ -1,15 +1,8 @@
 import SwiftUI
-
-enum House {
-    case Slytherin, Gryffindor, Hufflepuff, Ravenclaw
-}
+import Observation
 
 struct QuizView: View {
-    @State var results: [House] = []
-    @State var currentQuestion = 0
-    @State var selectedSliderQuestion: [String: Int] = [:]
-    @State var selectedAnswersMulti: [String?] = []
-    @State var allSelectedAnswers: [String: House] = [:]
+    @State private var quizVM = QuizViewModel()
     
     var body: some View {
         ZStack {
@@ -17,49 +10,44 @@ struct QuizView: View {
                 .resizable()
                 .ignoresSafeArea()
                 .scaledToFill()
+            
             VStack {
-                if currentQuestion < multipleChoiceQuestions.count {
-                       MultipleChoiceQuestion(
-                        question: multipleChoiceQuestions[currentQuestion], selectedAnswers: $selectedAnswersMulti,
-                           results: $results
-                       )
-                   } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count) {
-                       let pickerIndex = currentQuestion - multipleChoiceQuestions.count
-                       PickerQuestion(
-                        question: pickerQuestions[pickerIndex],
-                        results: $results,
-                       )
-                   } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count + pickerQuestions.count) {
-                       let sliderIndex = currentQuestion - multipleChoiceQuestions.count - pickerQuestions.count
-                       SliderQuestion(
-                           question: sliderQuestions[sliderIndex],
-                           results: $results,
-                           selectedSliderQuestion: $selectedSliderQuestion
-                       )
-                       .padding(50)
-                   } else {
-                       Text("something broke")
-                   }
+                if quizVM.currentQuestion < quizVM.multipleChoiceQuestionsData.count {
+                    MultipleChoiceQuestion(
+                        question: quizVM.multipleChoiceQuestionsData[quizVM.currentQuestion]
+                    )
+                    .id(quizVM.currentQuestion)
+                } else if quizVM.currentQuestion < (quizVM.multipleChoiceQuestionsData.count + quizVM.pickerQuestionsData.count) {
+                    let pickerIndex = quizVM.currentQuestion - quizVM.multipleChoiceQuestionsData.count
+                    PickerQuestion(
+                        question: quizVM.pickerQuestionsData[pickerIndex]
+                    )
+                    .id(quizVM.currentQuestion)
+                } else if quizVM.currentQuestion < (quizVM.multipleChoiceQuestionsData.count + quizVM.pickerQuestionsData.count + quizVM.sliderQuestionsData.count) {
+                    let sliderIndex = quizVM.currentQuestion - quizVM.multipleChoiceQuestionsData.count - quizVM.pickerQuestionsData.count
+                    SliderQuestion(
+                        question: quizVM.sliderQuestionsData[sliderIndex]
+                    )
+                    .id(quizVM.currentQuestion)
+                    .padding(50)
+                } else {
+                    Text("something broke")
+                }
+                
                 HStack {
-                    if currentQuestion > 0 {
-                        Button("Back", action: backAQuesiton)
+                    if quizVM.currentQuestion > 0 {
+                        Button("Back") { quizVM.backQuestion() }
                             .buttonStyle(ButtonCapsule())
                     }
-                    if currentQuestion < multipleChoiceQuestions.count + pickerQuestions.count + pickerQuestions.count - 1 {
-                        Button("Next", action: nextQuesiton)
+                    if quizVM.currentQuestion < quizVM.totalQuestions - 1 {
+                        Button("Next") { quizVM.nextQuestion() }
                             .buttonStyle(ButtonCapsule())
                     } else {
-                        NavigationLink("Finish Quiz →", destination: EndScreen(results: $results))
+                        NavigationLink("Finish Quiz →", destination: EndScreen(results: quizVM.results))
                             .buttonStyle(ButtonCapsule())
                     }
                 }
             }
         }
-    }
-    func nextQuesiton() {
-        currentQuestion += 1
-    }
-    func backAQuesiton() {
-        currentQuestion -= 1
     }
 }
