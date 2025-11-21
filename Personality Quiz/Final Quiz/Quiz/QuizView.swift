@@ -5,12 +5,9 @@ enum House {
 }
 
 struct QuizView: View {
-    @State var results: [House] = []
-    @State var currentQuestion = 0
-    @State var selectedSliderQuestion: [String: Int] = [:]
-    @State var selectedAnswersMulti: [String?] = []
-    @State var allSelectedAnswers: [String: House] = [:]
-    
+    // Single observable view model owning quiz state
+    @State private var viewModel = QuizViewModel()
+
     var body: some View {
         ZStack {
             Image("BackgroundImage1")
@@ -18,48 +15,48 @@ struct QuizView: View {
                 .ignoresSafeArea()
                 .scaledToFill()
             VStack {
-                if currentQuestion < multipleChoiceQuestions.count {
-                       MultipleChoiceQuestion(
-                        question: multipleChoiceQuestions[currentQuestion], selectedAnswers: $selectedAnswersMulti,
-                           results: $results
-                       )
-                   } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count) {
-                       let pickerIndex = currentQuestion - multipleChoiceQuestions.count
-                       PickerQuestion(
+                if viewModel.currentQuestion < multipleChoiceQuestions.count {
+                    MultipleChoiceQuestion(
+                        question: multipleChoiceQuestions[viewModel.currentQuestion],
+                        viewModel: viewModel.mcViewModel
+                    )
+                } else if viewModel.currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count) {
+                    let pickerIndex = viewModel.currentQuestion - multipleChoiceQuestions.count
+                    PickerQuestion(
                         question: pickerQuestions[pickerIndex],
-                        results: $results,
-                       )
-                   } else if currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count + pickerQuestions.count) {
-                       let sliderIndex = currentQuestion - multipleChoiceQuestions.count - pickerQuestions.count
-                       SliderQuestion(
-                           question: sliderQuestions[sliderIndex],
-                           results: $results,
-                           selectedSliderQuestion: $selectedSliderQuestion
-                       )
-                       .padding(50)
-                   } else {
-                       Text("something broke")
-                   }
+                        results: $viewModel.sliderViewModel.results
+                    )
+                } else if viewModel.currentQuestion < (multipleChoiceQuestions.count + pickerQuestions.count + sliderQuestions.count) {
+                    let sliderIndex = viewModel.currentQuestion - multipleChoiceQuestions.count - pickerQuestions.count
+                    SliderQuestion(
+                        viewModel: viewModel.sliderViewModel,
+                        question: sliderQuestions[sliderIndex]
+                    )
+                    .padding(50)
+                } else {
+                    Text("something broke")
+                }
                 HStack {
-                    if currentQuestion > 0 {
+                    if viewModel.currentQuestion > 0 {
                         Button("Back", action: backAQuesiton)
                             .buttonStyle(ButtonCapsule())
                     }
-                    if currentQuestion < multipleChoiceQuestions.count + pickerQuestions.count + pickerQuestions.count - 1 {
+                    if viewModel.currentQuestion < multipleChoiceQuestions.count + pickerQuestions.count + sliderQuestions.count - 1 {
                         Button("Next", action: nextQuesiton)
                             .buttonStyle(ButtonCapsule())
                     } else {
-                        NavigationLink("Finish Quiz →", destination: EndScreen(results: $results))
+                        NavigationLink("Finish Quiz →", destination: EndScreen(viewModel: EndScreenViewModel(results: viewModel.sliderViewModel.results)))
                             .buttonStyle(ButtonCapsule())
                     }
                 }
             }
         }
     }
+
     func nextQuesiton() {
-        currentQuestion += 1
+        viewModel.currentQuestion += 1
     }
     func backAQuesiton() {
-        currentQuestion -= 1
+        viewModel.currentQuestion -= 1
     }
 }

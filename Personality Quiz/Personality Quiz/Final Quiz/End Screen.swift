@@ -1,9 +1,8 @@
 import SwiftUI
-import Observation
 
 struct EndScreen: View {
-    @State var viewModel: EndScreenViewModel
-    
+    @ObservedObject var viewModel: EndScreenViewModel
+
     var body: some View {
         ZStack {
             Image("BackgroundImage1")
