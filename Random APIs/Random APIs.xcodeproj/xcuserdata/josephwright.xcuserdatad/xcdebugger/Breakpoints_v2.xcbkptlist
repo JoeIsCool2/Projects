@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "016CDA53-F5FB-4608-A887-6C70BFB19B73"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "74229E65-9207-4561-B0A7-535489DC5FE1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Random APIs/Style.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD:Personality Quiz/Final Quiz.xcodeproj/xcuserdata/josephwright.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "body"
+            landmarkType = "24">
+=======
+            startingLineNumber = "2"
+            endingLineNumber = "2"
+            landmarkName = "BlackFrame"
+            landmarkType = "14">
+>>>>>>> a222bcb (added unit 3 stuff):Random APIs/Random APIs.xcodeproj/xcuserdata/josephwright.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9F92188A-D11F-4E40-95A6-7A7372DF9BC7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../../var/folders/z4/ztrf2zqn11q0v208phfblymw0000gn/T/swift-generated-sources/@__swiftmacro_10Final_Quiz23PickerQuestionViewModelC7results18ObservationTrackedfMp_.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1"
+            endingLineNumber = "1">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
