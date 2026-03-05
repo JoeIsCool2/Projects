@@ -23,7 +23,12 @@ struct AssignmentsView: View {
                     ContentUnavailableView("No Assignments", systemImage: "tray")
                 } else {
                     List(assignments) { assignment in
-                        NavigationLink(destination: AssignmentDetailView(assignment: assignment)) {
+                        NavigationLink(destination: AssignmentDetailView(
+                            assignment: assignment,
+                            onProgressUpdated: { updated in
+                                assignments = assignments.map { $0.id == updated.id ? updated : $0 }
+                            }
+                        )) {
                             HStack(spacing: 16) {
                                 if assignment.userProgress == "complete" {
                                     Image(systemName: "checkmark.circle.fill")

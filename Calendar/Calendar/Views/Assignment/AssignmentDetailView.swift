@@ -10,6 +10,8 @@ struct AssignmentDetailView: View {
     @State var assignment: Assignment
     @State private var isUpdating = false
     @State private var isLoadingDetails = false
+    /// called when user marks complete/incomplete so the list can update the checkmark
+    var onProgressUpdated: ((Assignment) -> Void)?
     
     var isComplete: Bool {
         assignment.userProgress == "complete"
@@ -99,14 +101,23 @@ struct AssignmentDetailView: View {
         
         Task {
             do {
-                let updatedAssignment = try await APIService.shared.updateAssignmentProgress(
+                let response = try await APIService.shared.updateAssignmentProgress(
                     assignmentID: assignment.id,
                     progress: newProgress
                 )
-                
                 await MainActor.run {
-                    self.assignment = updatedAssignment
+                    // keep our existing name/body/etc, only update progress (API may not return full assignment)
+                    self.assignment = Assignment(
+                        id: assignment.id,
+                        name: assignment.name,
+                        assignmentType: assignment.assignmentType,
+                        assignedOn: assignment.assignedOn,
+                        dueOn: assignment.dueOn,
+                        userProgress: response.userProgress,
+                        body: assignment.body
+                    )
                     self.isUpdating = false
+                    onProgressUpdated?(self.assignment)
                 }
             } catch {
                 print("Failed to update progress: \(error)")
