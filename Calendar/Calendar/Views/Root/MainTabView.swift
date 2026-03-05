@@ -18,8 +18,8 @@ struct MainTabView: View {
                 .tabItem { Label("Schedule", systemImage: "calendar") }
             
             AssignmentsView()
-                .tabItem { Label("Assignments", systemImage: "list.bullet.clipboard") }
+                .tabItem { Label("Assignments", systemImage: "list.bullet") }
         }
-        .accentColor(.brandPrimary)
+        .tint(.blue)
     }
 }

@@ -5,15 +5,16 @@
 
 import SwiftUI
 
-// app colors and hex helper
+// just a couple colors i use in the app
 extension Color {
+    static let appBlue = Color(hex: "5D5FEF")
     static let brandPrimary = Color(hex: "5D5FEF")
     static let brandSecondary = Color(hex: "A5A6F6")
-    static let brandBackground = Color(hex: "F8F9FE")
+    static let brandBackground = Color(.systemGroupedBackground)
     static let brandDark = Color(hex: "1A202C")
-    static let success = Color(hex: "48BB78")
-    static let warning = Color(hex: "ED8936")
-    static let danger = Color(hex: "F56565")
+    static let success = Color.green
+    static let warning = Color.orange
+    static let danger = Color.red
     
     init(hex: String) {
         let scanner = Scanner(string: hex)

@@ -5,24 +5,21 @@
 
 import SwiftUI
 
-// little label: value tag used in the hero card
+// little label: value tag
 struct MetaPill: View {
     let label: String
     let value: String
     
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 4) {
             Text(label + ":")
-                .fontWeight(.bold)
-                .opacity(0.7)
-            Text(value)
                 .fontWeight(.medium)
+            Text(value)
         }
         .font(.caption)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
-        .background(Color.black.opacity(0.2))
-        .cornerRadius(8)
-        .foregroundColor(.white)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.gray.opacity(0.2))
+        .cornerRadius(6)
     }
 }

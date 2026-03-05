@@ -12,62 +12,59 @@ struct LoginView: View {
     @State private var password = ""
     
     var body: some View {
-        ZStack {
-            LinearGradient(colors: [.brandPrimary, .brandSecondary], startPoint: .topLeading, endPoint: .bottomTrailing)
-                .ignoresSafeArea()
+        VStack(spacing: 24) {
+            Spacer()
             
-            VStack(spacing: 30) {
-                Image(systemName: "graduationcap.fill")
-                    .font(.system(size: 70))
-                    .foregroundColor(.white)
-                    .shadow(radius: 10)
+            Image(systemName: "book.fill")
+                .font(.system(size: 50))
+                .foregroundColor(.white)
+            
+            Text("DevCampus")
+                .font(.title)
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+            
+            VStack(spacing: 12) {
+                TextField("Email", text: $email)
+                    .padding(12)
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .textInputAutocapitalization(.never)
+                    .keyboardType(.emailAddress)
                 
-                Text("DevCampus")
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
+                SecureField("Password", text: $password)
+                    .padding(12)
+                    .background(Color.white)
+                    .cornerRadius(8)
                 
-                VStack(spacing: 20) {
-                    TextField("Email", text: $email)
-                        .padding()
-                        .background(.white)
-                        .cornerRadius(12)
-                        .textInputAutocapitalization(.never)
-                        .keyboardType(.emailAddress)
-                    
-                    SecureField("Password", text: $password)
-                        .padding()
-                        .background(.white)
-                        .cornerRadius(12)
-                    
-                    if let error = appState.authError {
-                        Text(error)
-                            .foregroundColor(.white)
-                            .fontWeight(.bold)
-                            .font(.caption)
-                    }
-                    
-                    Button(action: {
-                        appState.login(email: email, pass: password)
-                    }) {
-                        if appState.isLoggingIn {
-                            ProgressView().tint(.black)
-                        } else {
-                            Text("Sign In")
-                                .bold()
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.white)
-                                .cornerRadius(12)
-                                .foregroundColor(.brandPrimary)
-                        }
-                    }
-                    .disabled(appState.isLoggingIn)
+                if let error = appState.authError {
+                    Text(error)
+                        .foregroundColor(.white)
+                        .font(.caption)
                 }
-                .padding(30)
-                .background(.ultraThinMaterial)
-                .cornerRadius(24)
-                .padding()
+                
+                Button(action: {
+                    appState.login(email: email, pass: password)
+                }) {
+                    if appState.isLoggingIn {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Text("Sign In")
+                            .frame(maxWidth: .infinity)
+                            .padding(12)
+                            .background(Color.white)
+                            .foregroundColor(.appBlue)
+                            .cornerRadius(8)
+                    }
+                }
+                .disabled(appState.isLoggingIn)
             }
+            .padding(20)
+            
+            Spacer()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.appBlue)
     }
 }

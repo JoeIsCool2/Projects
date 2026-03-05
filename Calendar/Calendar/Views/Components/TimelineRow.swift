@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// one row in the schedule list - date on left, lesson info on right
+// one row in the schedule list
 struct TimelineRow: View {
     let entry: CalendarEntry
     
@@ -16,42 +16,36 @@ struct TimelineRow: View {
     }
     
     var body: some View {
-        HStack(alignment: .top, spacing: 16) {
-            VStack {
-                Text(entry.date.weekday().uppercased())
-                    .font(.caption).bold()
-                    .foregroundColor(isToday ? .brandPrimary : .secondary)
-                
+        HStack(alignment: .top, spacing: 12) {
+            VStack(spacing: 2) {
+                Text(entry.date.weekday())
+                    .font(.caption)
+                    .foregroundColor(isToday ? .blue : .secondary)
                 Text(entry.date.dayNumber())
-                    .font(.title3).bold()
-                    .foregroundColor(isToday ? .brandPrimary : .primary)
+                    .font(.headline)
+                    .foregroundColor(isToday ? .blue : .primary)
             }
-            .frame(width: 44)
+            .frame(width: 40)
             
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 if entry.holiday {
-                    Text("HOLIDAY")
-                        .font(.caption).bold().foregroundColor(.purple)
-                        .padding(4).background(Color.purple.opacity(0.1)).cornerRadius(4)
+                    Text("Holiday")
+                        .font(.caption)
+                        .foregroundColor(.purple)
                 } else if let id = entry.dayID {
-                    Text("DAY \(id)")
-                        .font(.caption).bold().foregroundColor(.blue)
+                    Text("Day \(id)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
                 }
-                
                 Text(entry.lessonName ?? "TBD")
                     .font(.headline)
                     .lineLimit(2)
             }
-            .padding()
+            .padding(10)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.white)
-            .cornerRadius(12)
-            .shadow(radius: 2)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(isToday ? Color.brandPrimary : .clear, lineWidth: 2)
-            )
+            .cornerRadius(8)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 2)
     }
 }

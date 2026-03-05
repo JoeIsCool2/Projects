@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// tab that shows all assignments, tap to see detail and mark complete
+// tab that shows all assignments
 struct AssignmentsView: View {
     @Environment(AppState.self) var appState
     @State private var assignments: [Assignment] = []
@@ -16,7 +16,7 @@ struct AssignmentsView: View {
         NavigationStack {
             Group {
                 if isLoading && assignments.isEmpty {
-                    ProgressView("Loading Assignments...")
+                    ProgressView("Loading...")
                 } else if let error = errorMessage {
                     ContentUnavailableView("Error", systemImage: "exclamationmark.triangle", description: Text(error))
                 } else if assignments.isEmpty {
@@ -29,41 +29,31 @@ struct AssignmentsView: View {
                                 assignments = assignments.map { $0.id == updated.id ? updated : $0 }
                             }
                         )) {
-                            HStack(spacing: 16) {
+                            HStack(spacing: 12) {
                                 if assignment.userProgress == "complete" {
                                     Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(Color.success)
-                                        .font(.title2)
+                                        .foregroundColor(.green)
                                 } else {
                                     Image(systemName: "circle")
-                                        .foregroundColor(.gray.opacity(0.5))
-                                        .font(.title2)
+                                        .foregroundColor(.gray)
                                 }
-                                
-                                VStack(alignment: .leading, spacing: 4) {
+                                VStack(alignment: .leading, spacing: 2) {
                                     Text(assignment.name)
                                         .font(.headline)
-                                        .foregroundColor(.primary)
-                                    
-                                    Text(assignment.assignmentType.capitalized)
+                                    Text(assignment.assignmentType)
                                         .font(.caption)
-                                        .padding(.horizontal, 8)
-                                        .padding(.vertical, 2)
-                                        .background(Color.gray.opacity(0.1))
-                                        .cornerRadius(4)
+                                        .foregroundColor(.secondary)
                                 }
                             }
-                            .padding(.vertical, 4)
                         }
                     }
-                    .listStyle(.plain)
+                    .listStyle(.insetGrouped)
                     .refreshable {
                         await loadAssignments()
                     }
                 }
             }
-            .navigationTitle("All Assignments")
-            .background(Color.brandBackground)
+            .navigationTitle("Assignments")
             .task {
                 if assignments.isEmpty {
                     await loadAssignments()
@@ -84,7 +74,7 @@ struct AssignmentsView: View {
         } catch {
             print("Failed to load assignments: \(error)")
             await MainActor.run {
-                self.errorMessage = "Failed to load assignments. Please pull to refresh."
+                self.errorMessage = "Failed to load. Pull to refresh."
                 self.isLoading = false
             }
         }

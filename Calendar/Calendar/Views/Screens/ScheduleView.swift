@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-// list of all days in the schedule by month, tap to see details
+// list of all days in the schedule by month
 struct ScheduleView: View {
     @Environment(AppState.self) var appState
     @State private var hasScrolledInitial = false
@@ -15,8 +15,8 @@ struct ScheduleView: View {
             ScrollViewReader { proxy in
                 List {
                     if appState.isLoading && appState.groupedEntries.isEmpty {
-                        ProgressView("Loading Schedule...")
-                            .frame(maxWidth: .infinity, alignment: .center)
+                        ProgressView("Loading...")
+                            .frame(maxWidth: .infinity)
                             .listRowBackground(Color.clear)
                     } else {
                         ForEach(appState.sortedMonthKeys, id: \.self) { month in
@@ -27,19 +27,17 @@ struct ScheduleView: View {
                                             EmptyView()
                                         }
                                         .opacity(0)
-                                        
                                         TimelineRow(entry: entry)
                                     }
                                     .listRowSeparator(.hidden)
-                                    .listRowBackground(Color.clear)
+                                    .listRowBackground(Color(.systemGroupedBackground))
                                     .id(entry.id)
                                 }
                             }
                         }
                     }
                 }
-                .listStyle(.plain)
-                .background(Color.brandBackground)
+                .listStyle(.insetGrouped)
                 .navigationTitle("Schedule")
                 .refreshable {
                     await appState.loadData()

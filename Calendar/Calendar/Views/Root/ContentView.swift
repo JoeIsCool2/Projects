@@ -10,17 +10,12 @@ struct ContentView: View {
     @Environment(AppState.self) var appState
     
     var body: some View {
-        ZStack {
-            Color.brandBackground.ignoresSafeArea()
-            
+        Group {
             if appState.isAuthenticated {
                 MainTabView()
-                    .transition(.move(edge: .trailing))
             } else {
                 LoginView()
-                    .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.4), value: appState.isAuthenticated)
     }
 }

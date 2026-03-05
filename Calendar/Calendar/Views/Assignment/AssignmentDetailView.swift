@@ -5,12 +5,11 @@
 
 import SwiftUI
 
-// full assignment view with body text and mark complete button
+// full assignment view with body and mark complete button
 struct AssignmentDetailView: View {
     @State var assignment: Assignment
     @State private var isUpdating = false
     @State private var isLoadingDetails = false
-    /// called when user marks complete/incomplete so the list can update the checkmark
     var onProgressUpdated: ((Assignment) -> Void)?
     
     var isComplete: Bool {
@@ -18,65 +17,52 @@ struct AssignmentDetailView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Text(assignment.name)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                
-                HStack {
-                    MetaPill(label: "Type", value: assignment.assignmentType.capitalized)
+        List {
+            Section {
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        MetaPill(label: "Type", value: assignment.assignmentType)
+                        if let due = assignment.dueOn {
+                            MetaPill(label: "Due", value: due.utcFormatted())
+                        }
+                    }
                     
-                    if let due = assignment.dueOn {
-                        MetaPill(label: "Due", value: due.utcFormatted())
+                    if isLoadingDetails {
+                        ProgressView("Loading...")
+                            .frame(maxWidth: .infinity)
+                    } else if let bodyText = assignment.body {
+                        Text(bodyText)
+                            .font(.body)
+                    } else {
+                        Text("No details.")
+                            .foregroundColor(.secondary)
                     }
                 }
-                
-                Divider()
-                
-                if isLoadingDetails {
-                    ProgressView("Loading full details...")
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .padding()
-                } else if let bodyText = assignment.body {
-                    Text(bodyText)
-                        .font(.body)
-                        .foregroundColor(.primary)
-                } else {
-                    Text("No additional details provided.")
-                        .italic()
-                        .foregroundColor(.secondary)
-                }
-                
-                Spacer(minLength: 40)
-                
+                .padding(.vertical, 8)
+            } header: {
+                Text(assignment.name)
+                    .font(.headline)
+            }
+            
+            Section {
                 Button(action: toggleCompletion) {
                     HStack {
                         if isUpdating {
                             ProgressView()
-                                .tint(.white)
                         } else {
-                            Image(systemName: isComplete ? "xmark.circle.fill" : "checkmark.circle.fill")
-                            Text(isComplete ? "Mark as Incomplete" : "Mark as Complete")
+                            Image(systemName: isComplete ? "xmark.circle" : "checkmark.circle")
+                            Text(isComplete ? "Mark Incomplete" : "Mark Complete")
                         }
                     }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
                     .frame(maxWidth: .infinity)
-                    .background(isComplete ? Color.danger : Color.success)
-                    .cornerRadius(12)
-                    .shadow(radius: 5)
+                    .foregroundColor(isComplete ? .red : .green)
                 }
                 .disabled(isUpdating || isLoadingDetails)
             }
-            .padding()
         }
         .navigationTitle("Assignment")
         .navigationBarTitleDisplayMode(.inline)
-        .background(Color.brandBackground)
         .task {
-            // fetch full details if we dont have body yet
             if assignment.body == nil {
                 isLoadingDetails = true
                 do {
@@ -87,9 +73,7 @@ struct AssignmentDetailView: View {
                     }
                 } catch {
                     print("Failed to fetch assignment: \(error)")
-                    await MainActor.run {
-                        self.isLoadingDetails = false
-                    }
+                    await MainActor.run { self.isLoadingDetails = false }
                 }
             }
         }
@@ -106,7 +90,6 @@ struct AssignmentDetailView: View {
                     progress: newProgress
                 )
                 await MainActor.run {
-                    // keep our existing name/body/etc, only update progress (API may not return full assignment)
                     self.assignment = Assignment(
                         id: assignment.id,
                         name: assignment.name,

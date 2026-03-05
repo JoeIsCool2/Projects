@@ -17,7 +17,6 @@ struct DashboardView: View {
         return selectedEntry != nil
     }
     
-    // what to show - full detail if we have it, else selected, else today
     var displayEntry: CalendarEntry? {
         return fullEntry ?? selectedEntry ?? appState.todayEntry
     }
@@ -32,83 +31,84 @@ struct DashboardView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: 16) {
                     
                     if !isDetailMode {
-                        // header with greeting and logout
                         HStack {
-                            VStack(alignment: .leading) {
+                            VStack(alignment: .leading, spacing: 2) {
                                 Text("\(greeting),")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                 Text(appState.currentUser?.firstName ?? "Student")
-                                    .font(.largeTitle)
-                                    .bold()
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
                             }
                             Spacer()
-                            
                             Button(action: { appState.logout() }) {
                                 Image(systemName: "person.circle.fill")
-                                    .font(.system(size: 40))
-                                    .foregroundColor(.brandPrimary)
+                                    .font(.title2)
+                                    .foregroundColor(.blue)
                             }
                         }
                         .padding(.horizontal)
-                        .padding(.top)
+                        .padding(.top, 8)
                     } else {
-                        Spacer().frame(height: 10)
+                        Spacer().frame(height: 8)
                     }
                     
                     if isLoadingDetails {
-                        ProgressView("Fetching details...")
-                            .padding(.top, 50)
+                        ProgressView("Loading...")
+                            .padding(.top, 40)
                     }
                     else if let entry = displayEntry {
                         
-                        // hero card with date and lesson name
-                        VStack(alignment: .leading, spacing: 16) {
+                        // today/selected day card - simple white with blue bar
+                        VStack(alignment: .leading, spacing: 12) {
                             HStack {
-                                Text(entry.date.utcFormatted().uppercased())
-                                    .font(.caption).fontWeight(.bold).opacity(0.8)
+                                Text(entry.date.utcFormatted())
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
                                 Spacer()
                                 if let id = entry.dayID {
-                                    Text(id)
-                                        .font(.caption).fontWeight(.black)
-                                        .padding(6)
-                                        .background(.white.opacity(0.2))
-                                        .clipShape(Capsule())
+                                    Text("Day \(id)")
+                                        .font(.caption)
+                                        .padding(4)
+                                        .background(Color.blue.opacity(0.15))
+                                        .cornerRadius(4)
                                 }
                             }
                             
                             Text(entry.lessonName ?? "No Lesson")
-                                .font(.system(size: 28, weight: .heavy))
-                                .fixedSize(horizontal: false, vertical: true)
+                                .font(.title2)
+                                .fontWeight(.bold)
                             
-                            HStack {
+                            HStack(spacing: 8) {
                                 MetaPill(label: "Word", value: entry.wordOfTheDay ?? "N/A")
                                 MetaPill(label: "ID", value: entry.lessonID?.uuidString.prefix(4).description ?? "N/A")
                             }
                         }
-                        .foregroundColor(.white)
-                        .padding(24)
-                        .background(
-                            LinearGradient(colors: [.brandPrimary, .brandSecondary], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        .padding(16)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
+                        .overlay(
+                            Rectangle()
+                                .fill(Color.blue)
+                                .frame(width: 4),
+                            alignment: .leading
                         )
-                        .cornerRadius(24)
-                        .shadow(color: .brandPrimary.opacity(0.3), radius: 10, y: 5)
+                        .cornerRadius(8)
                         .padding(.horizontal)
                         
-                        // objective, reading, challenge cards
-                        VStack(spacing: 16) {
+                        VStack(spacing: 12) {
                             DetailCard(
                                 title: "Main Objective",
                                 icon: "target",
-                                color: .brandPrimary,
+                                color: .blue,
                                 content: entry.mainObjective,
-                                emptyText: "No specific objective listed for today."
+                                emptyText: "No objective listed."
                             )
                             
-                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                                 DetailCard(
                                     title: "Reading",
                                     icon: "book.fill",
@@ -116,11 +116,10 @@ struct DashboardView: View {
                                     content: entry.readingDue,
                                     emptyText: "No reading."
                                 )
-                                
                                 DetailCard(
                                     title: "Challenge",
                                     icon: "laptopcomputer",
-                                    color: .purple,
+                                    color: .blue,
                                     content: entry.dailyCodeChallengeName,
                                     emptyText: "No challenge."
                                 )
@@ -128,20 +127,18 @@ struct DashboardView: View {
                         }
                         .padding(.horizontal)
                         
-                        // assignments due today and assigned today
-                        VStack(spacing: 20) {
+                        VStack(alignment: .leading, spacing: 12) {
                             AssignmentSection(
                                 title: "Due Today",
                                 assignments: entry.assignmentsDue,
-                                color: .danger,
-                                emptyMessage: "No assignments due today!"
+                                color: .red,
+                                emptyMessage: "No assignments due today"
                             )
-                            
                             AssignmentSection(
                                 title: "Assigned Today",
                                 assignments: entry.newAssignments,
-                                color: .success,
-                                emptyMessage: "Nothing new assigned today."
+                                color: .green,
+                                emptyMessage: "Nothing new today"
                             )
                         }
                         
@@ -150,13 +147,12 @@ struct DashboardView: View {
                         ContentUnavailableView("No Data", systemImage: "calendar")
                     }
                 }
-                .padding(.bottom, 50)
+                .padding(.bottom, 24)
             }
-            .background(Color.brandBackground)
+            .background(Color(.systemGroupedBackground))
             .navigationTitle(isDetailMode ? "Details" : "")
             .navigationBarTitleDisplayMode(.inline)
             .task {
-                // when we navigated from schedule we need to fetch full details
                 if let liteEntry = selectedEntry {
                     isLoadingDetails = true
                     do {

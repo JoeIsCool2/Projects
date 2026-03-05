@@ -5,38 +5,33 @@
 
 import SwiftUI
 
-// one assignment in a list with a colored bar on the side
+// one assignment in the horizontal list on dashboard
 struct AssignmentRow: View {
     let assignment: Assignment
     let color: Color
     
     var body: some View {
         NavigationLink(destination: AssignmentDetailView(assignment: assignment)) {
-            HStack(spacing: 12) {
+            HStack(spacing: 8) {
                 RoundedRectangle(cornerRadius: 2)
                     .fill(color)
-                    .frame(width: 4)
-                    .padding(.vertical, 4)
+                    .frame(width: 3)
                 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(assignment.name)
-                        .font(.headline)
+                        .font(.subheadline)
+                        .fontWeight(.medium)
                         .lineLimit(2)
-                    
-                    Text(assignment.assignmentType.capitalized)
-                        .font(.caption)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 2)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(4)
+                    Text(assignment.assignmentType)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
                 }
+                .frame(width: 160, alignment: .leading)
             }
-            .padding()
-            .frame(width: 200, alignment: .leading)
+            .padding(8)
             .background(Color.white)
-            .cornerRadius(12)
-            .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 1)
+            .cornerRadius(6)
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.plain)
     }
 }
