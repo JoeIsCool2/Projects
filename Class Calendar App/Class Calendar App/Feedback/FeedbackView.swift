@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct FeedbackView: View {
-    @State var lessonForFeedback: String = ""   // selected lesson
+    @State var lessonForFeedback: String = "" 
     @State private var calendarData = CalendarData()
     @State private var feedback: String = ""
     @Binding var isSubmittingFeedback: Bool

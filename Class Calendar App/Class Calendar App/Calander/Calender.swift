@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct Calendar: View {
-    @State var calendarData = CalendarData()
+    var calendarData: CalendarData
     @State private var calendar: [Today] = []
     @State var isClicked = false
     @State var currentlyClickedOn: Today? = nil
@@ -93,7 +93,6 @@ struct Calendar: View {
             }
             .padding()
         }
-        // 👇 Load indicators and default calendar automatically
         .onAppear {
             indicators = calendarData.findData()
             if let first = indicators.first {
@@ -102,27 +101,4 @@ struct Calendar: View {
             }
         }
     }
-}
-
-
-extension CalendarData {
-    func findCurrentCalendar(indicator: String) -> [Today] {
-        let calendarDays = days
-        return calendarDays.filter { $0.lessonID.contains(indicator) }
-    }
-    
-    func findData() -> [String] {
-        var allTypes: [String] = []
-        for day in days {
-            let prefix = String(day.lessonID.prefix(2))
-            if !allTypes.contains(prefix) {
-                allTypes.append(prefix)
-            }
-        }
-        return allTypes
-    }
-}
-
-#Preview {
-    Calendar()
 }
