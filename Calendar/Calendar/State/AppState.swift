@@ -1,42 +1,27 @@
+//
+//  AppState.swift
+//  Calendar
+//
+
 import SwiftUI
 import Observation
 
-/// Minimal user profile persisted locally for convenience.
-struct UserProfile: Codable {
-    /// Given name.
-    let firstName: String
-    /// Family name.
-    let lastName: String
-    /// Email address.
-    let email: String
-}
-
-/// Central state container for authentication and calendar data.
-/// Responsible for login/logout and fetching/organizing schedule entries.
+// holds login state and all the calendar/schedule data
 @Observable
 class AppState {
-    /// Whether the user is currently authenticated.
     var isAuthenticated = false
-    /// Error message to show on failed login.
     var authError: String?
-    /// Indicates a login request is in flight.
     var isLoggingIn = false
-    /// The currently signed-in user profile.
     var currentUser: UserProfile?
     
-    /// The detailed entry for today (if available).
     var todayEntry: CalendarEntry?
-    /// Schedule entries grouped by month section title.
     var groupedEntries: [String: [CalendarEntry]] = [:]
-    /// Ordered list of month section titles for display.
     var sortedMonthKeys: [String] = []
-    /// Indicates when schedule data is being fetched.
     var isLoading = false
-    /// The entry ID to scroll to (today or next upcoming).
-    var scrollTargetID: String? // Which day to scroll to
+    var scrollTargetID: String?
     
-    /// Attempts to restore a previous session and pre-load data if possible.
     init() {
+        // try to restore last login
         if let data = UserDefaults.standard.data(forKey: "userProfile"),
            let user = try? JSONDecoder().decode(UserProfile.self, from: data),
            APIService.shared.isLoggedIn {
@@ -46,7 +31,6 @@ class AppState {
         }
     }
     
-    /// Clears local session state and tokens.
     func logout() {
         APIService.shared.logout()
         UserDefaults.standard.removeObject(forKey: "userProfile")
@@ -56,7 +40,6 @@ class AppState {
         groupedEntries = [:]
     }
     
-    /// Starts an async login flow and persists the user profile on success.
     func login(email: String, pass: String) {
         isLoggingIn = true
         authError = nil
@@ -85,7 +68,6 @@ class AppState {
         }
     }
     
-    /// Loads today's entry and the safe schedule concurrently.
     func loadData() async {
         await MainActor.run { self.isLoading = true }
         
@@ -104,7 +86,6 @@ class AppState {
         }
     }
     
-    /// Groups, sorts, and prepares schedule entries for display and scrolling.
     private func processFullSchedule(_ entries: [CalendarEntry]) {
         let sortedEntries = entries.sorted { $0.date < $1.date }
         let grouped = Dictionary(grouping: sortedEntries) { $0.monthSection }
@@ -117,10 +98,10 @@ class AppState {
             return date1 < date2
         }
         
+        // scroll to today or next day
         let now = Date()
         if let upcoming = sortedEntries.first(where: { $0.date >= now.addingTimeInterval(-86400) }) {
             self.scrollTargetID = upcoming.id
         }
     }
 }
-

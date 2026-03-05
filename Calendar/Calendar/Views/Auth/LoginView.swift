@@ -1,12 +1,14 @@
+//
+//  LoginView.swift
+//  Calendar
+//
+
 import SwiftUI
 
-/// Presents a simple email/password sign-in form and triggers authentication.
+// email and password login form
 struct LoginView: View {
-    /// Shared app state used to perform login and display errors.
     @Environment(AppState.self) var appState
-    /// User-entered email address.
     @State private var email = ""
-    /// User-entered password.
     @State private var password = ""
     
     var body: some View {
@@ -69,4 +71,3 @@ struct LoginView: View {
         }
     }
 }
-

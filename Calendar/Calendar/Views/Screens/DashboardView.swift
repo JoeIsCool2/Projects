@@ -1,27 +1,27 @@
+//
+//  DashboardView.swift
+//  Calendar
+//
+
 import SwiftUI
 
-/// Displays a summary of today's class and, when navigated from schedule, detailed info for a selected day.
+// home screen - shows today (or selected day) with lesson info and assignments
 struct DashboardView: View {
-    /// Shared app state used for auth and today's data.
     @Environment(AppState.self) var appState
     
     var selectedEntry: CalendarEntry? = nil
-    /// Full detail fetched from the API if only a lite entry was provided.
     @State private var fullEntry: CalendarEntry?
-    /// Indicates when the detail fetch is in progress.
     @State private var isLoadingDetails = false
     
-    /// True when showing details for a specific selected day.
     var isDetailMode: Bool {
         return selectedEntry != nil
     }
     
-    /// Chooses the best available entry to display (full > selected > today).
+    // what to show - full detail if we have it, else selected, else today
     var displayEntry: CalendarEntry? {
         return fullEntry ?? selectedEntry ?? appState.todayEntry
     }
     
-    /// Time-of-day greeting derived from the current hour.
     var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         if hour < 12 { return "Good Morning" }
@@ -35,6 +35,7 @@ struct DashboardView: View {
                 VStack(spacing: 24) {
                     
                     if !isDetailMode {
+                        // header with greeting and logout
                         HStack {
                             VStack(alignment: .leading) {
                                 Text("\(greeting),")
@@ -61,9 +62,10 @@ struct DashboardView: View {
                     if isLoadingDetails {
                         ProgressView("Fetching details...")
                             .padding(.top, 50)
-                    } 
+                    }
                     else if let entry = displayEntry {
                         
+                        // hero card with date and lesson name
                         VStack(alignment: .leading, spacing: 16) {
                             HStack {
                                 Text(entry.date.utcFormatted().uppercased())
@@ -96,6 +98,7 @@ struct DashboardView: View {
                         .shadow(color: .brandPrimary.opacity(0.3), radius: 10, y: 5)
                         .padding(.horizontal)
                         
+                        // objective, reading, challenge cards
                         VStack(spacing: 16) {
                             DetailCard(
                                 title: "Main Objective",
@@ -125,6 +128,7 @@ struct DashboardView: View {
                         }
                         .padding(.horizontal)
                         
+                        // assignments due today and assigned today
                         VStack(spacing: 20) {
                             AssignmentSection(
                                 title: "Due Today",
@@ -141,7 +145,7 @@ struct DashboardView: View {
                             )
                         }
                         
-                    } 
+                    }
                     else {
                         ContentUnavailableView("No Data", systemImage: "calendar")
                     }
@@ -151,8 +155,8 @@ struct DashboardView: View {
             .background(Color.brandBackground)
             .navigationTitle(isDetailMode ? "Details" : "")
             .navigationBarTitleDisplayMode(.inline)
-            
             .task {
+                // when we navigated from schedule we need to fetch full details
                 if let liteEntry = selectedEntry {
                     isLoadingDetails = true
                     do {
@@ -167,4 +171,3 @@ struct DashboardView: View {
         }
     }
 }
-

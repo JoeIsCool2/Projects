@@ -1,6 +1,11 @@
+//
+//  MainTabView.swift
+//  Calendar
+//
+
 import SwiftUI
 
-/// Hosts the main tabs for the app: Dashboard, Schedule, and Assignments.
+// the 3 tabs - Home, Schedule, Assignments
 struct MainTabView: View {
     @Environment(AppState.self) var appState
     
@@ -12,7 +17,6 @@ struct MainTabView: View {
             ScheduleView()
                 .tabItem { Label("Schedule", systemImage: "calendar") }
             
-            // NEW: The Assignments Tab
             AssignmentsView()
                 .tabItem { Label("Assignments", systemImage: "list.bullet.clipboard") }
         }

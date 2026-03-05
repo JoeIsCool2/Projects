@@ -7,15 +7,13 @@
 import Foundation
 
 
-/// A single assignment item with optional assigned/due dates.
+// one assignment from the API
 struct Assignment: Codable, Identifiable {
     let id: UUID
     let name: String
     let assignmentType: String
     let assignedOn: Date?
     let dueOn: Date?
-    
-    // NEW: Tracks completion status from the server
-    var userProgress: String? 
-    var body: String? // Adding body as per your API docs
+    var userProgress: String?
+    var body: String?
 }

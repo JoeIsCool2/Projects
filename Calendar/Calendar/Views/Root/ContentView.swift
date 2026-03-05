@@ -1,8 +1,12 @@
+//
+//  ContentView.swift
+//  Calendar
+//
+
 import SwiftUI
 
-/// Displays either the authenticated main interface or the login flow based on `AppState.isAuthenticated`.
+// shows either login screen or main app depending on if theyre logged in
 struct ContentView: View {
-    /// Shared application state injected at the app entry point.
     @Environment(AppState.self) var appState
     
     var body: some View {
@@ -20,4 +24,3 @@ struct ContentView: View {
         .animation(.easeInOut(duration: 0.4), value: appState.isAuthenticated)
     }
 }
-

@@ -2,13 +2,10 @@
 //  AssignmentsView.swift
 //  Calendar
 //
-//  Created by joseph wright on 3/4/26.
-//
-
 
 import SwiftUI
 
-/// A dedicated tab displaying all assignments for the cohort.
+// tab that shows all assignments, tap to see detail and mark complete
 struct AssignmentsView: View {
     @Environment(AppState.self) var appState
     @State private var assignments: [Assignment] = []
@@ -28,7 +25,6 @@ struct AssignmentsView: View {
                     List(assignments) { assignment in
                         NavigationLink(destination: AssignmentDetailView(assignment: assignment)) {
                             HStack(spacing: 16) {
-                                // Status Icon
                                 if assignment.userProgress == "complete" {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundColor(Color.success)
@@ -39,7 +35,6 @@ struct AssignmentsView: View {
                                         .font(.title2)
                                 }
                                 
-                                // Assignment Info
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(assignment.name)
                                         .font(.headline)
@@ -72,8 +67,7 @@ struct AssignmentsView: View {
         }
     }
     
-    /// Fetches the assignment list from the API.
-    private func loadAssignments() async {
+    func loadAssignments() async {
         isLoading = true
         errorMessage = nil
         do {
@@ -83,7 +77,7 @@ struct AssignmentsView: View {
                 self.isLoading = false
             }
         } catch {
-            print("⚠️ Failed to load assignments: \(error)")
+            print("Failed to load assignments: \(error)")
             await MainActor.run {
                 self.errorMessage = "Failed to load assignments. Please pull to refresh."
                 self.isLoading = false

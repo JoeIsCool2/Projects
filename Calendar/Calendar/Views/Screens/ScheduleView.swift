@@ -1,11 +1,13 @@
+//
+//  ScheduleView.swift
+//  Calendar
+//
+
 import SwiftUI
 
-/// Displays the schedule grouped by month and navigates to day details.
+// list of all days in the schedule by month, tap to see details
 struct ScheduleView: View {
-    /// Shared app state providing schedule data and refresh.
     @Environment(AppState.self) var appState
-    
-    /// Tracks whether we've performed the initial auto-scroll.
     @State private var hasScrolledInitial = false
     
     var body: some View {
@@ -51,7 +53,6 @@ struct ScheduleView: View {
         }
     }
     
-    /// Scrolls the list to the target entry (today/next).
     func scrollToToday(proxy: ScrollViewProxy) {
         if let targetID = appState.scrollTargetID {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -63,4 +64,3 @@ struct ScheduleView: View {
         }
     }
 }
-

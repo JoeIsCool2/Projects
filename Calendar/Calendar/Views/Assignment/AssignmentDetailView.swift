@@ -1,12 +1,16 @@
+//
+//  AssignmentDetailView.swift
+//  Calendar
+//
+
 import SwiftUI
 
-/// Displays assignment details and allows the user to mark it as complete.
+// full assignment view with body text and mark complete button
 struct AssignmentDetailView: View {
     @State var assignment: Assignment
     @State private var isUpdating = false
-    @State private var isLoadingDetails = false // NEW: Tracks initial data load
+    @State private var isLoadingDetails = false
     
-    /// Helper to check if the assignment is currently marked as complete
     var isComplete: Bool {
         assignment.userProgress == "complete"
     }
@@ -14,7 +18,6 @@ struct AssignmentDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // Header
                 Text(assignment.name)
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -29,7 +32,6 @@ struct AssignmentDetailView: View {
                 
                 Divider()
                 
-                // Content Body
                 if isLoadingDetails {
                     ProgressView("Loading full details...")
                         .frame(maxWidth: .infinity, alignment: .center)
@@ -46,7 +48,6 @@ struct AssignmentDetailView: View {
                 
                 Spacer(minLength: 40)
                 
-                // Action Button
                 Button(action: toggleCompletion) {
                     HStack {
                         if isUpdating {
@@ -72,10 +73,8 @@ struct AssignmentDetailView: View {
         .navigationTitle("Assignment")
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.brandBackground)
-        
-        // NEW: Fetch full details when the view opens!
         .task {
-            // Only fetch if we don't already have the body text
+            // fetch full details if we dont have body yet
             if assignment.body == nil {
                 isLoadingDetails = true
                 do {
@@ -85,7 +84,7 @@ struct AssignmentDetailView: View {
                         self.isLoadingDetails = false
                     }
                 } catch {
-                    print("⚠️ Failed to fetch full assignment: \(error)")
+                    print("Failed to fetch assignment: \(error)")
                     await MainActor.run {
                         self.isLoadingDetails = false
                     }
@@ -94,8 +93,7 @@ struct AssignmentDetailView: View {
         }
     }
     
-    /// Triggers the API call to toggle the user's progress
-    private func toggleCompletion() {
+    func toggleCompletion() {
         isUpdating = true
         let newProgress = isComplete ? "notStarted" : "complete"
         
@@ -111,7 +109,7 @@ struct AssignmentDetailView: View {
                     self.isUpdating = false
                 }
             } catch {
-                print("⚠️ Failed to update progress: \(error)")
+                print("Failed to update progress: \(error)")
                 await MainActor.run { self.isUpdating = false }
             }
         }

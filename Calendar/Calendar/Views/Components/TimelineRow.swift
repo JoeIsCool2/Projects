@@ -1,11 +1,14 @@
+//
+//  TimelineRow.swift
+//  Calendar
+//
+
 import SwiftUI
 
-/// Displays a single schedule entry with date badge and lesson summary.
+// one row in the schedule list - date on left, lesson info on right
 struct TimelineRow: View {
-    /// The calendar entry to render.
     let entry: CalendarEntry
     
-    /// Whether the entry's date matches the current UTC day.
     var isToday: Bool {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = TimeZone(secondsFromGMT: 0)!
@@ -52,4 +55,3 @@ struct TimelineRow: View {
         .padding(.vertical, 4)
     }
 }
-
